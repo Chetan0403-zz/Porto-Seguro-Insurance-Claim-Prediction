@@ -70,33 +70,33 @@ colnames(test_xgb_meta) <- c("driver_id", "xgb_pred")
 rm("xgb")
 
 ## XGBoost cross-validation
-detach("package:lightgbm", unload = TRUE) 
-train <- subset(data_xgb, !is.na(data_xgb$target))
-test <- subset(data_xgb, is.na(data_xgb$target))
-dtrain_xgb <- xgb.DMatrix(data = data.matrix(train[,-2]), label = data.matrix(train[,2]))
-cvFolds <- createFolds(train$target, k=5, list=TRUE, returnTrain=FALSE)
-rm("train", "test")
-gc()
-
-param <- list(booster="gbtree",
-              objective="binary:logistic",
-              eta = 0.02,
-              gamma = 0,
-              max_depth = 5,
-              min_child_weight = 7,
-              subsample = 1.0,
-              colsample_bytree = 0.3681)
-
-xgb_cv <- xgb.cv(data = dtrain_xgb,
-                 params = param,
-                 nrounds = 5000,
-                 feval = xgb_normalizedgini,
-                 maximize = TRUE,
-                 prediction = TRUE,
-                 folds = cvFolds,
-                 print_every_n = 50,
-                 early_stopping_round = 50)
-
+# detach("package:lightgbm", unload = TRUE) 
+# train <- subset(data_xgb, !is.na(data_xgb$target))
+# test <- subset(data_xgb, is.na(data_xgb$target))
+# dtrain_xgb <- xgb.DMatrix(data = data.matrix(train[,-2]), label = data.matrix(train[,2]))
+# cvFolds <- createFolds(train$target, k=5, list=TRUE, returnTrain=FALSE)
+# rm("train", "test")
+# gc()
+# 
+# param <- list(booster="gbtree",
+#               objective="binary:logistic",
+#               eta = 0.02,
+#               gamma = 0,
+#               max_depth = 5,
+#               min_child_weight = 7,
+#               subsample = 1.0,
+#               colsample_bytree = 0.3681)
+# 
+# xgb_cv <- xgb.cv(data = dtrain_xgb,
+#                  params = param,
+#                  nrounds = 5000,
+#                  feval = xgb_normalizedgini,
+#                  maximize = TRUE,
+#                  prediction = TRUE,
+#                  folds = cvFolds,
+#                  print_every_n = 50,
+#                  early_stopping_round = 50)
+# 
 ###################################
 ## LightGBM meta features creation
 ###################################
