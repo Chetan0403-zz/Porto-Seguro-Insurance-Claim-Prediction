@@ -106,6 +106,36 @@ for (i in 1:length(category_cols))
 }
 rescaled <- rescaled[,-1]
 
+## Barreca method: class probability for high cardinal columns (currently only car_11_cat w/ 104 level)
+# folds from straitified k fold using caret
+# temp <- subset(data, !is.na(data$target))
+# temp$index <- seq(1:nrow(temp))
+# folds <- createFolds(temp$target, k = 5, list = FALSE, returnTrain=TRUE)
+# 
+# # Adding pos_prob to train 
+# barecca <- data.frame()
+# for (i in 1:length(unique(folds)))
+# {
+#   t <- subset(temp, index %in% which(!(folds %in% i)))
+#   v <- subset(temp, index %in% which(folds %in% i))
+#   
+#   t <- t %>%
+#     group_by(car_11_cat) %>%
+#     mutate(n = n(),
+#            count_positive = length(car_11_cat[target == 1])) %>%
+#     ungroup %>%
+#     mutate(perc_positive = count_positive/n) %>%
+#     select(car_11_cat, perc_positive, n)
+#   
+#   t$pos_prob <- (1/(1+exp((t$n-1)/1)))*(0.0364)+ (1-(1/(1+exp((t$n-1)/1))))*t$perc_positive 
+#   
+#   v$pos_prob <- t$pos_prob[match(v$car_11_cat, t$car_11_cat)]
+#   v$pos_prob[is.na(v$pos_prob)] <- .0364
+#   v <- v[,c("car_11_cat", "pos_prob")]
+#   
+#   barecca <- rbind(barecca, v)
+# }
+
 ## Clustering similar sets of features together
 # ind continuous
 ind <- data[, names(data)[grepl("ind", names(data))]]
@@ -128,13 +158,11 @@ reg[is.na(reg)] <- -1
 
 # Output cluster indexes based on number of clusters provided
 createclus <- function(df, nc){
-  
   k.means.fit <- kmeans(df, nc, iter.max = 20)
   df.name <- deparse(substitute(df))
   t <- data.frame(k.means.fit$cluster)
   colnames(t)[colnames(t) == "k.means.fit.cluster"] <- paste0(df.name, "_clus_num")
   return(t)
-  
 }
 
 ind <- createclus(ind, 10)
@@ -160,10 +188,12 @@ one_hot <- dummy.data.frame(one_hot, names = names(one_hot), sep="_")
 one_hot <- one_hot[, !(names(one_hot) %in% names(one_hot)[grepl("_NA", names(one_hot))])]
 
 ## Putting all datasets together
+# Preparing training data for XGBoost. XGBoost hangs with 100+ features coming from 1-0 encoding
 data_xgb <- cbind(data 
                   ,ind, reg, car 
-                  ,rescaled) #xgb unable to handle 100+ features
+                  ,rescaled)
 
+# Preparing training data for LightGBM. 
 data_lgb <- cbind(data[, !(names(data) %in% names(data)[grepl("_cat", names(data))])] #original without categoricals
                     ,ind, reg, car 
                     ,rescaled
