@@ -1,0 +1,2 @@
+# Porto-Seguro-Insurance-Claim-Prediction
+Porto Seguro, One of Brazil's largest auto and homeowner insurance companies, has an ongoing Kaggle competition challenging to build a model that predicts the probability that a driver will initiate an auto insurance claim in the next year. The R scripts included in this repository earn top 10% spot with very minimal feature engineering and building ensembles. 
