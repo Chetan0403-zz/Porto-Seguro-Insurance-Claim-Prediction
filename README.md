@@ -17,4 +17,4 @@ The R script 'PS Data Prep v1.R' focuses on building useful features from raw da
 
 The options to create lots of new features are limited since the sponsors have not provided (for confidentiality reasons) any information about the features. Thus, one does not have true knowledge what the raw features mean or represent.
 
-The R script 'PS training + ensemble v1.R' creates two training models a. XGBoost Model with hyper-parameters already tuned using Bayesian optimization b. A LightGBM model with minimal hyper parameter tuning. These two models can further be stacked with another model (more like XGBoost) or the average of their probabilities taken for final submission.
+The R script 'PS training + ensemble v1.R' creates two training models a. XGBoost Model with hyper-parameters already tuned using Bayesian optimization. Basic script for Bayesian Optimization is included (hyper-opt.R) b. A LightGBM model with minimal hyper parameter tuning. These two models can further be stacked with another model (more like XGBoost) or the average of their probabilities taken for final submission.
